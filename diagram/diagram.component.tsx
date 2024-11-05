@@ -1,6 +1,6 @@
-import * as go from 'gojs';
-import { ReactDiagram } from 'gojs-react';
-import React from 'react';
+import * as go from "gojs";
+import { ReactDiagram } from "gojs-react";
+import React from "react";
 
 // Props passed in from a parent component holding state, some of which will be passed to ReactDiagram
 interface WrapperProps {
@@ -23,26 +23,32 @@ export class DiagramWrapper extends React.Component<WrapperProps> {
   public componentDidMount() {
     const diagram = this.diagramRef.current?.getDiagram();
     if (diagram instanceof go.Diagram) {
-      diagram.addDiagramListener('ChangedSelection', this.props.onDiagramEvent);
+      diagram.addDiagramListener("ChangedSelection", this.props.onDiagramEvent);
     }
   }
 
   public componentWillUnmount() {
     const diagram = this.diagramRef.current?.getDiagram();
     if (diagram instanceof go.Diagram) {
-      diagram.removeDiagramListener('ChangedSelection', this.props.onDiagramEvent);
+      diagram.removeDiagramListener(
+        "ChangedSelection",
+        this.props.onDiagramEvent
+      );
     }
   }
 
   private initDiagram(): go.Diagram {
     const diagram = new go.Diagram({
       isReadOnly: true,
-      'undoManager.isEnabled': true,
-      'clickCreatingTool.archetypeNodeData': { text: 'new node', color: 'lightblue' },
+      "undoManager.isEnabled": true,
+      "clickCreatingTool.archetypeNodeData": {
+        text: "new node",
+        color: "lightblue",
+      },
       layout: new go.TreeLayout({
         angle: 90,
         layerSpacing: 50,
-        nodeSpacing: 50
+        nodeSpacing: 50,
       }),
       model: new go.TreeModel({
         // Optional function to ensure unique keys are generated
@@ -52,39 +58,43 @@ export class DiagramWrapper extends React.Component<WrapperProps> {
           data.key = k;
           return k;
         },
-      })
+      }),
     });
 
-    diagram.nodeTemplate = new go.Node('Auto')
-      .bind(new go.Binding('location', 'loc', go.Point.parse).makeTwoWay(go.Point.stringify))
+    diagram.nodeTemplate = new go.Node("Auto")
+      .bind(
+        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(
+          go.Point.stringify
+        )
+      )
       .add(
-        new go.Shape('RoundedRectangle', {
-          name: 'SHAPE',
-          fill: 'white',
+        new go.Shape("RoundedRectangle", {
+          name: "SHAPE",
+          fill: "white",
           strokeWidth: 0,
-          portId: '',
+          portId: "",
           fromLinkable: true,
           toLinkable: true,
-          cursor: 'pointer'
-        }).bind(new go.Binding('fill', 'color')),
+          cursor: "pointer",
+        }).bind(new go.Binding("fill", "color")),
         new go.TextBlock({
           margin: 8,
           editable: true,
-          font: '400 .875rem Roboto, sans-serif'
-        }).bind(new go.Binding('text').makeTwoWay())
+          font: "400 .875rem Roboto, sans-serif",
+        }).bind(new go.Binding("text").makeTwoWay())
       );
 
     diagram.linkTemplate = new go.Link()
-      .bind(new go.Binding('relinkableFrom', 'canRelink'))
-      .bind(new go.Binding('relinkableTo', 'canRelink'))
-      .add(new go.Shape(), new go.Shape({ toArrow: 'Standard' }));
+      .bind(new go.Binding("relinkableFrom", "canRelink"))
+      .bind(new go.Binding("relinkableTo", "canRelink"))
+      .add(new go.Shape(), new go.Shape({ toArrow: "Standard" }));
 
     diagram.addDiagramListener("TreeExpanded", (e) => {
-        const node = e.subject.findTreeParent();
-        if (node !== null) {
-          node.isTreeExpanded = !node.isTreeExpanded;
-        }
-      });
+      const node = e.subject.findTreeParent();
+      if (node !== null) {
+        node.isTreeExpanded = !node.isTreeExpanded;
+      }
+    });
 
     return diagram;
   }

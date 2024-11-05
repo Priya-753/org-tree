@@ -1,4 +1,4 @@
-import Papa from 'papaparse';
+import Papa from "papaparse";
 
 interface CsvRow {
   "ROA Agent ID": string;
@@ -28,7 +28,6 @@ export function parseCsvToJson(file: File): Promise<Node[]> {
       skipEmptyLines: true,
       complete: (results: any) => {
         const rows = results.data as CsvRow[];
-        
 
         rows.forEach((row) => {
           const state = row["Primary State"] ?? "";
@@ -43,14 +42,14 @@ export function parseCsvToJson(file: File): Promise<Node[]> {
 
         const filteredNodes = Array.from(nodes.values()).filter((node) => {
           return (
-            (node.parent && nodes.has(node.parent)) || 
-            Array.from(nodes.values()).some(n => n.parent === node.key)
+            (node.parent && nodes.has(node.parent)) ||
+            Array.from(nodes.values()).some((n) => n.parent === node.key)
           );
         });
 
         console.log(nodes);
         console.log(JSON.stringify(filteredNodes, null, 2));
-        
+
         resolve(filteredNodes);
       },
       error: (error: any) => {
@@ -63,17 +62,19 @@ export function parseCsvToJson(file: File): Promise<Node[]> {
 // Function to determine color based on agent status
 function determineColor(status: string): string {
   switch (status) {
-    case 'active':
-      return 'lightgreen';
-    case 'invite_sent':
-      return 'orange';
-    case 'new':
-      return 'gray';
-    case 'application_in_progress':
-      return 'lightblue';
-    case 'waiting_for_approval':
-      return 'lightblue';
+    case "active":
+      return "lightgreen";
+    case "invite_sent":
+      return "orange";
+    case "new":
+      return "gray";
+    case "application_in_progress":
+      return "yellow";
+    case "waiting_for_approval":
+      return "lightblue";
+    case "rejected":
+      return "pink";
     default:
-      return 'pink';
+      return "pink";
   }
 }
