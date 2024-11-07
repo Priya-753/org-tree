@@ -1,6 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import Papa from 'papaparse';
+import React, { useState } from 'react';
 import TreeLayout from './sponsor_agent';
 import { parseCsvToJson } from '@/csv_file_read';
 
