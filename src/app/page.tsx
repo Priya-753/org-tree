@@ -6,13 +6,15 @@ import { parseCsvToJson } from '@/csv_file_read';
 
 const ParentComponent: React.FC = () => {
   const [nodes, setNodes] = useState<any[]>([]);
+  const [links, setLinks] = useState<any[]>([]);
   
   // Function to handle file input change
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      parseCsvToJson(file).then((nodes) => {
-        setNodes(nodes);
+      parseCsvToJson(file).then((graphStructure) => {
+        setNodes(graphStructure.nodes);
+        setLinks(graphStructure.links);
       });
     }
   };
@@ -20,7 +22,7 @@ const ParentComponent: React.FC = () => {
   return (
     <div>
       <input type="file" accept=".csv" onChange={handleFileChange} />
-      <TreeLayout nodes={nodes} />
+      <TreeLayout nodes={nodes} links={links} />
     </div>
   );
 };

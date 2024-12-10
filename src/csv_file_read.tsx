@@ -10,15 +10,28 @@ interface CsvRow {
   "Sponsor Status": string;
 }
 
-interface Node {
+export interface Node {
   key: string;
   text: string;
   parent?: string;
   color: string;
+  group?: string;
+  isGroup?: boolean;
+}
+
+export interface Link {
+  key: string | number;
+  from: string;
+  to: string;
+}
+
+export interface GraphStructure {
+  nodes: Node[],
+  links: Link[]
 }
 
 // This function will be triggered by the file input change
-export function parseCsvToJson(file: File): Promise<Node[]> {
+export function parseCsvToJson(file: File): Promise<GraphStructure> {
   return new Promise((resolve) => {
     const nodes: Map<string, Node> = new Map();
 
@@ -50,8 +63,17 @@ export function parseCsvToJson(file: File): Promise<Node[]> {
 
         console.log(nodes);
         console.log(JSON.stringify(filteredNodes, null, 2));
-        
-        resolve(filteredNodes);
+
+        const links = [];
+        for (let i = 0; i < filteredNodes.length; i++) {
+          const data = filteredNodes[i];
+          if (data.parent) links.push({ key: i, from: data.parent, to: data.key });
+        }
+        const graphStructure: GraphStructure = {
+          nodes: filteredNodes,
+          links: links
+        }
+        resolve(graphStructure);
       },
       error: (error: any) => {
         console.error("Error parsing CSV:", error);

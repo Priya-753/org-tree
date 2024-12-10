@@ -4,27 +4,15 @@ import * as React from 'react';
 import { useState, useCallback } from 'react';
 import { NextPage } from 'next';
 import DiagramWrapper from '../../diagram';
+import { Node, Link } from '@/csv_file_read';
 
-interface Node {
-  key: number;
-  text: string;
-  parent?: number;
-  color: string;
-}
 
 interface TreeLayoutProps {
   nodes: Node[];
+  links: Link[];
 }
 
-const TreeLayout: NextPage<TreeLayoutProps> = ({ nodes }) => {
-  
-  const [linkDataArray] = useState([
-    { key: -1, from: 0, to: 1 },
-    { key: -2, from: 0, to: 2 },
-    { key: -3, from: 1, to: 1 },
-    { key: -4, from: 2, to: 3 },
-    { key: -5, from: 3, to: 0 },
-  ]);
+const TreeLayout: NextPage<TreeLayoutProps> = ({ nodes, links }) => {
 
   const [modelData, setModelData] = useState({ canRelink: true });
   const [selectedKey, setSelectedKey] = useState<number | null>(null);
@@ -43,7 +31,7 @@ const TreeLayout: NextPage<TreeLayoutProps> = ({ nodes }) => {
     <div className="flex flex-col items-center p-4">
       <DiagramWrapper
         nodeDataArray={nodes}
-        linkDataArray={linkDataArray}
+        linkDataArray={links}
         modelData={modelData}
         skipsDiagramUpdate={skipsDiagramUpdate}
         onDiagramEvent={handleDiagramEvent}
@@ -55,3 +43,8 @@ const TreeLayout: NextPage<TreeLayoutProps> = ({ nodes }) => {
 };
 
 export default TreeLayout;
+
+// Align
+// Count
+// Search
+// Expansion
