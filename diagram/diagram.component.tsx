@@ -1,6 +1,6 @@
-import * as go from 'gojs';
-import { ReactDiagram } from 'gojs-react';
-import React from 'react';
+import * as go from "gojs";
+import { ReactDiagram } from "gojs-react";
+import React from "react";
 
 // Props passed in from a parent component holding state, some of which will be passed to ReactDiagram
 interface WrapperProps {
@@ -23,14 +23,17 @@ export class DiagramWrapper extends React.Component<WrapperProps> {
   public componentDidMount() {
     const diagram = this.diagramRef.current?.getDiagram();
     if (diagram instanceof go.Diagram) {
-      diagram.addDiagramListener('ChangedSelection', this.props.onDiagramEvent);
+      diagram.addDiagramListener("ChangedSelection", this.props.onDiagramEvent);
     }
   }
 
   public componentWillUnmount() {
     const diagram = this.diagramRef.current?.getDiagram();
     if (diagram instanceof go.Diagram) {
-      diagram.removeDiagramListener('ChangedSelection', this.props.onDiagramEvent);
+      diagram.removeDiagramListener(
+        "ChangedSelection",
+        this.props.onDiagramEvent
+      );
     }
   }
 
@@ -88,11 +91,15 @@ export class DiagramWrapper extends React.Component<WrapperProps> {
 
     const diagram = new go.Diagram({
       isReadOnly: true,
-      'undoManager.isEnabled': true,
-      'clickCreatingTool.archetypeNodeData': { text: 'new node', color: 'lightblue' },
+      "undoManager.isEnabled": true,
+      "clickCreatingTool.archetypeNodeData": {
+        text: "new node",
+        color: "lightblue",
+      },
       layout: new go.TreeLayout({
-        angle: 90, // Parent-child relationship flows top-to-bottom
-        layerSpacing: 100,
+        angle: 90,
+        layerSpacing: 50,
+        nodeSpacing: 50,
       }),
       model: new go.GraphLinksModel({
         linkKeyProperty: "id", // Specify the unique key property for links
